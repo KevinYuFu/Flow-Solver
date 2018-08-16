@@ -1,2 +1,2 @@
 # Flow-Solver
-An algorithm which solves flo
+An algorithm which solves flow
