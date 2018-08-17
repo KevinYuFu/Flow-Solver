@@ -1,5 +1,5 @@
 cxx = python
-EXEC = flow
+EXEC = FlowSolver
 EXECTest = test
 
 all:
