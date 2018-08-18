@@ -16,6 +16,7 @@ import heapq
 # CSP Class
 class Flow():
     def __init__( self, grid ):
+        self.grid = grid
         Variables = []
         pass
 
@@ -41,7 +42,55 @@ class FlowLine():
 
     # Finds a feasible path that will connect the two points
     def findPath( self ):
+        # find direction options
         pass
+
+    # Converts a direction in to a coordinate direction
+    def dirToCoord( c ):
+        if c == 'u': return (0, 0)
+        if c == 'd': return (0, 0)
+        if c == 'l': return (0, 0)
+        if c == 'r': return (0, 0)
+
+class Grid():
+    def __init__( self, data ):
+        if isinstance(data, str):
+            self.readFromFile( data )
+        if isinstance(data, list):
+            self.matrix = matrix
+        else:
+            print( 'data type does not match')
+            #Throw an error here
+
+        self.dim = len(self.matrix)
+
+    # generate grid from given file
+    def readFromFile( self, fname ):
+        with open(fname) as f:
+            data = f.readlines()
+        data = [x.strip() for x in data] 
+        data = [list(x) for x in data]
+        self.matrix = data
+
+    # Generator for coordinates
+    def coords( self ):
+        for y in range(self.dim):
+            for x in range(self.dim):
+                yield (x, y)
+
+    # Returns values at given coord
+    def at( self, a, b=None ):
+        if isinstance(a, tuple):
+            x, y = a
+            return self.matrix[y][x]
+        return self.matrix[b][a]
+
+    # print grid (in future, make this overide print statement)
+    def printGrid( self ):
+        for y in range( self.dim ):
+            for x in range( self.dim ):
+                print( self.at(x, y) , end='')
+            print()
 
 
 def solveFlow( problem ):
@@ -67,6 +116,9 @@ def solveFlow( problem ):
 
 # Main
 def main():
+    myGrid = Grid('testProblems/5x5.txt')
+    myGrid.printGrid()
+    print(myGrid.matrix)
     pass
 
 if __name__ == '__main__':
