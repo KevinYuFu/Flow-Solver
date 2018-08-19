@@ -47,10 +47,10 @@ class FlowLine():
 
     # Converts a direction in to a coordinate direction
     def dirToCoord( c ):
-        if c == 'u': return (0, 0)
-        if c == 'd': return (0, 0)
-        if c == 'l': return (0, 0)
-        if c == 'r': return (0, 0)
+        if c == 'u': return (0, 1)
+        if c == 'd': return (0, -1)
+        if c == 'l': return (-1, 0)
+        if c == 'r': return (1, 0)
 
 class Grid():
     def __init__( self, data ):
