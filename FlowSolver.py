@@ -20,6 +20,27 @@ class Flow():
         Variables = []
         pass
 
+    # Find groups where of colours are adjacent to each other in initial state of game
+    def findClusters( self ):
+        visited = set()
+        clusters = []
+        for coord in self.grid.coords():
+            cluster = self.searchCluster( coord, visited )
+            if cluster: clusters.append( set(cluster) )
+        return clusters
+
+    def searchCluster( self, coord, visited ):
+        if coord in visited: return None
+        visited.add(coord)
+        if self.grid.at(coord) == '0': return None
+        cluster = set()
+        cluster.add((self.grid.at(coord), coord))
+        for neighbour in self.grid.neighbours( coord ):
+            childBranch = self.searchCluster( neighbour, visited )
+            if childBranch:
+                cluster.update( childBranch )
+        return cluster
+
     # Selects a Variable and a Path to attempt
     def selectPath():
         pass
@@ -45,12 +66,17 @@ class FlowLine():
         # find direction options
         pass
 
+    # Calculate how constrained this flow line is
+    def constraints( self ):
+        # Calucate by how close to the edge, and/or how much open space around it's two begining points
+        pass
+
     # Converts a direction in to a coordinate direction
     def dirToCoord( c ):
-        if c == 'u': return (0, 1)
-        if c == 'd': return (0, -1)
-        if c == 'l': return (-1, 0)
-        if c == 'r': return (1, 0)
+        if c == 'u': return np.array((0, 1))
+        if c == 'd': return np.array((0, -1))
+        if c == 'l': return np.array((-1, 0))
+        if c == 'r': return np.array((1, 0))
 
 class Grid():
     def __init__( self, data ):
@@ -92,6 +118,26 @@ class Grid():
                 print( self.at(x, y) , end='')
             print()
 
+    # Generator for all neibours of the given coordinate
+    def neighbours( self, coord ):
+        for d in self.directions():
+            newCoord = tuple(coord + d)
+            if not self.outOfBound(newCoord):
+                yield newCoord
+
+    # Given a coord, return if out of bound or not
+    def outOfBound( self, coord ):
+        x, y = coord
+        if x < 0 or y < 0 or x >= self.dim or y >= self.dim: return True
+        return False
+
+    # Generator for direction coords
+    def directions( self ):
+        yield np.array((0, 1))
+        yield np.array((0, -1))
+        yield np.array((-1, 0))
+        yield np.array((1, 0))
+
 
 def solveFlow( problem ):
     if problem.isComplete():
@@ -118,7 +164,10 @@ def solveFlow( problem ):
 def main():
     myGrid = Grid('testProblems/5x5.txt')
     myGrid.printGrid()
-    print(myGrid.matrix)
+    flowProblem = Flow(myGrid)
+    print(flowProblem.findClusters())
+    #print(flowProblem.searchCluster((4,0), set()))
+    
     pass
 
 if __name__ == '__main__':
